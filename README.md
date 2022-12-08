@@ -21,7 +21,7 @@ This part is a detailed bioinformatics guide for our quantitative pseudoridine s
 Here, we provide optimized reads pre-processing for three different library: eCLIP, KAPA, and Takara (A modified Takara library method, see experimental details in our [Paper](https://www.biorxiv.org/content/10.1101/2022.10.25.513650v1)).
 
 #### 1.1.1 Takara Library
-Takara Library is suitable for quantitative purposes of RNA with regular length (e.g. mRNA sequencing). \
+Takara Library is suitable for quantitative purposes of RNA with regular length (e.g. mRNA sequencing). 
 - Cut adaptor, __cutadapt__ is recommended.
 ```bash
 cutadapt -j {CORES} --times 1 -e 0.1 -O 3 --quality-cutoff 25 -m 55 \
@@ -70,7 +70,7 @@ umi_tools extract --extract-method=string --3prime --bc-pattern=NNNNNN \
 ```
 
 #### 1.1.2 KAPA Library
-Takara Library is suitable for semi-quantitative purposes of RNA with regular length (e.g. mRNA sequencing). From our [data](https://www.biorxiv.org/content/10.1101/2022.10.25.513650v1), the KAPA library result is pretty consistant with the Takara library result in whole transcriptome pseudouridine sequencing using PRAISE. However, if you want to get precise quantitative result, we still recomend Takara library since it has UMI for deduplication. \
+Takara Library is suitable for semi-quantitative purposes of RNA with regular length (e.g. mRNA sequencing). From our [data](https://www.biorxiv.org/content/10.1101/2022.10.25.513650v1), the KAPA library result is pretty consistant with the Takara library result in whole transcriptome pseudouridine sequencing using PRAISE. However, if you want to get precise quantitative result, we still recomend Takara library since it has UMI for deduplication. 
 
 - Cut adaptor, __cutadapt__ is recommended.
 	- This is the only step for pre-processing KAPA library reads.
@@ -128,3 +128,17 @@ umi_tools extract --extract-method=string --bc-pattern=NNNNNNNNNNNNNN \
 # {input.dedup_R2}: read 2 file after deduplication (.fq.gz)
 # {output.cut5prime_R2}: read file after cutting 14 mer of 5' end of read (.fq.gz)
 ```
+
+### 1.2 Mapping your reads
+
+---
+__IMPORTANT MESSAGES:__
+- If you want to do realignment, be sure to use references without any intron (i.e. using transcriptome instead of genome). Because our realigment scripts do not support mapping results with intron.
+- If you do not want to do realignment, we still recomend using references without any intron and the mapping method without spliced alignment. Because our signal is deletion, it may cause errors with spliced alignment.
+---
+
+#### 1.2.1 Mapping with realignment
+
+
+#### 1.2.2 Mapping without realignment
+
