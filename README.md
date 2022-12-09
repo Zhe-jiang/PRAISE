@@ -129,15 +129,56 @@ umi_tools extract --extract-method=string --bc-pattern=NNNNNNNNNNNNNN \
 # {output.cut5prime_R2}: read file after cutting 14 mer of 5' end of read (.fq.gz)
 ```
 
+#### 1.1.4 Other libraries
+- Please follow the pre-processing protocols of the specific libraries
+
 ### 1.2 Mapping your reads
 
 ---
 __IMPORTANT MESSAGES:__
 - If you want to do realignment, be sure to use references without any intron (i.e. using transcriptome instead of genome). Because our realigment scripts do not support mapping results with intron.
 - If you do not want to do realignment, we still recomend using references without any intron and the mapping method without spliced alignment. Because our signal is deletion, it may cause errors with spliced alignment.
+- This part is a general tutorial, see details about realignment at Part 3.
 ---
 
 #### 1.2.1 Mapping with realignment
+Realignment will give you a more precise result but require a amount of computational resource. If you want to get a precise quantitative result, especially on genome wide sequencing, it is better to do realignment.
+
+- First mapping with hisat2, __hisat2__ is required
+	- Be sure to use parameter '--no-spliced-alignment'
+	- Be sure to use parameter '--very-sensitive' because this step is to get all possible mapping results
+	- Be sure to use the reference without any intron
+
+```bash
+hisat2 -p {CORES} \
+-x {INDEX_HISAT2} \
+-q --repeat --no-spliced-alignment --very-sensitive \
+-U {input.processed_R2} \
+-S {output.SAM}
+# {CORES}: core number used
+# {INDEX_HISAT2}: index needed for hisat2
+# {input.processed_R2}: pre-processed read 2 file (.fq.gz)
+# {output.SAM}: output SAM file (.SAM)
+```
+
+- Sort and change into BAM
+
+```bash
+samtools sort -O BAM -o {output.bam} -@ {CORES} -m {MEM} -T {output.bam_temp} {input.sam}
+# {CORES}: core number used
+# {MEM}: Memory used per core (e.g. 2G)
+# {output.bam}: output sorted BAM file (.BAM)
+# {output.bam.temp}: temperory file
+# {input.sam}: input SAM file (.SAM)
+```
+
+- Create index for BAM
+
+```bash
+samtools index {input.bam} {output.bai}
+# {input.bam}: Input sorted BAM file (.BAM)
+# {output.bai}: Output index file (.BAM.BAI)
+```
 
 
 #### 1.2.2 Mapping without realignment
