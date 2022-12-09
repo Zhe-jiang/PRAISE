@@ -161,7 +161,7 @@ hisat2 -p {CORES} \
 # {output.SAM}: output SAM file (.SAM)
 ```
 
-- Sort and change into BAM
+- Sort and change into BAM, __samtools__ is recommended
 
 ```bash
 samtools sort -O BAM -o {output.bam} -@ {CORES} -m {MEM} -T {output.bam_temp} {input.sam}
@@ -172,12 +172,47 @@ samtools sort -O BAM -o {output.bam} -@ {CORES} -m {MEM} -T {output.bam_temp} {i
 # {input.sam}: input SAM file (.SAM)
 ```
 
-- Create index for BAM
+- Create index for BAM, __samtools__ is recommended
 
 ```bash
 samtools index {input.bam} {output.bai}
 # {input.bam}: Input sorted BAM file (.BAM)
 # {output.bai}: Output index file (.BAM.BAI)
+```
+
+- Filter all unmapped reads, __samtools__ is recommended
+
+```bash
+samtools view -h -@ {CORES} -bF 4 {input.bam_sorted} -o {output.bam_mapped}
+# {CORES}: core number used
+# {input.bam_sorted}: Input sorted BAM file (.BAM)
+# {output.bam_mapped}: Output BAM file without unmapped reads (.BAM)
+```
+
+- Sort by reads name, __samtools__ is recommended
+	- Realignment requires input BAM file input with name sorted
+
+```bash
+samtools sort -@ {CORES} -m {} -O BAM -n -o {output.bam_name_sorted} -T {output.bam_name_sorted.temp} {input.bam_mapped}
+# {CORES}: core number used
+# {MEM}: Memory used per core (e.g. 2G)
+# {output.bam_name_sorted}: output name sorted BAM file (.BAM)
+# {output.bam_name_sorted.temp}: temperory file
+# {input.bam_mapped}: input BAM file without unmapped reads (.BAM)
+```
+
+- Realign, __scripts here__ is required
+	- See scripts details at __Part 3__
+
+```bash
+python {Realign_script} --fast -t {CORES} -ms 4.8 \
+-x {Reference} -i {input.bam_name_sorted} -o {output.bam_realigned} -f {output.bam_filtered}
+# {Realign_script}: use realignment_forward.py for reads aligned to the forward sequences, use realignment_reverse.py for reads aligned to the reverse sequences
+# {CORES}: core number used
+# {Reference}: Reference used (.fa, same reference as the hisat2 index created from)
+# {input.bam_name_sorted}: Output name sorted BAM file (.BAM)
+# {output.bam_realigned}: Result BAM file of the realignment (.BAM)
+# {output.bam_filtered}: BAM file contains all filtered reads (.BAM)
 ```
 
 
