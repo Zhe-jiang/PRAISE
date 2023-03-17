@@ -877,7 +877,7 @@ if __name__ == "__main__":
     min_score_per_base = 4.8                            # defaulted min score per base : 4.8
     max_softclip_input = 8                              # defaulted max_softclip input : 8
     core_num = 1                                        # defaulted core used : 1
-    matrix_file = "test_8"                              # defaulted matrix file
+    matrix_file = "PRAISE"                              # defaulted matrix file
     rm_multi_mode = "keep"                              # the mode to remove multiple mapping, default: "keep"
     rm_multi_switch = "off"                             # a signal weather need remove multiple mapping or not, default: off
         # keep: keep all mapping results if their scores all equal to the best score
