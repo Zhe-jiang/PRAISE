@@ -1,5 +1,5 @@
 # PRAISE: A quantitative pseudoridine sequencing method
-This is the bioinformatics guide and scripts for PRAISE, a quantitative pseudouridine sequencing method. Our paper is now available at [BioRxiv](https://www.biorxiv.org/content/10.1101/2022.10.25.513650v1). \
+This is the bioinformatics guide and scripts for PRAISE, a quantitative pseudouridine sequencing method. Our paper is published on [_Nature Chemical Biology_](https://www.nature.com/articles/s41589-023-01304-7). \
 For all the codes shown in this document, the parameters are the same as our published data. You can change suitable parameters for yourself.
 
 ## 0 Requirments
