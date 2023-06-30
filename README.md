@@ -136,13 +136,13 @@ umi_tools extract --extract-method=string --bc-pattern=NNNNNNNNNNNNNN \
 
 ---
 __IMPORTANT MESSAGES:__
-- If you want to do realignment, be sure to use references without any intron (i.e. using transcriptome instead of genome). Because our realigment scripts do not support mapping results with intron.
-- If you do not want to do realignment, we still recomend using references without any intron and the mapping method without spliced alignment. Because our signal is deletion, it may cause errors with spliced alignment.
-- This part is a general tutorial, see details about realignment at Part 3.
+- If you want to do realignment, be sure to use references without any intron (i.e. using transcriptome instead of genome). Because our realignment scripts do not support mapping results with introns.
+- If you do not want to do realignment, we still recommend using references without any intron and the mapping method without spliced alignment. Because our signal is deletion, it may cause errors with spliced alignment.
+- This part is a general tutorial, see details about realignment in Part 3.
 ---
 
 #### 1.2.1 Mapping with realignment
-Realignment will give you a more precise result but require a amount of computational resource. If you want to get a precise quantitative result, especially on genome wide sequencing, it is better to do realignment.
+The realignment will give you a more precise result but require an amount of computational resources. If you want a precise quantitative result, especially on genome-wide sequencing, it is better to do realignment.
 
 - First mapping with hisat2, __hisat2__ is required
 	- Be sure to use parameter '--no-spliced-alignment'
@@ -197,11 +197,11 @@ samtools sort -@ {CORES} -m {} -O BAM -n -o {output.bam_name_sorted} -T {output.
 # {CORES}: core number used
 # {MEM}: Memory used per core (e.g. 2G)
 # {output.bam_name_sorted}: output name sorted BAM file (.BAM)
-# {output.bam_name_sorted.temp}: temperory file
+# {output.bam_name_sorted.temp}: temporary file
 # {input.bam_mapped}: input BAM file without unmapped reads (.BAM)
 ```
 
-- Realign, __scripts here__ is required
+- Realign, __script  here__ is required
 	- See scripts details at __Part 3__
 
 ```bash
@@ -217,4 +217,40 @@ python {Realign_script} --fast -t {CORES} -ms 4.8 \
 
 
 #### 1.2.2 Mapping without realignment
+- Use whatever mapping method you want
+- References without introns are recommended because our signal is deletion, it may cause errors with spliced alignment.
+
+
+
+### 1.3 Count your BAM file and call signals
+---
+__Important messages__:
+- You can do whatever pipelines you like to count the BAM file and call signals
+- The pipeline and scripts used in our paper will be provided in this part
+- Please __follow the instructions__ to call signal to get better results
+---
+
+#### 1.3.1 Pipeline used in our paper for counting BAM file
+
+- Make BAM into mpilup file, __Samtools__ is used
+
+```bash
+samtools mpileup -d {depth} -BQ0 -f {REF} {input.bam} -o {output.mpileup} --ff UNMAP,QCFAIL -aa
+# {depth}: max depth, 15000000 was used
+# {REF}: reference, use the reference you used in mapping (.fasta)
+# {input.bam}: input BAM file after mapping (.bam, need to be sorted)
+# {output.mpileup}: output MPILEUP file (.mpilup)
+```
+
+- Count MPILEUP file, and make it into BMAT file, __script here__ is used
+	- Script here is originally from [__Howard MENG__](https://github.com/MengHoward)
+  
+```bash
+python {Count_script} -p {CORES} -i {input.mpileup} -o {output.bmat}
+# {Count_script}: use parse-mpileup.py
+# {CORES}: core number used
+# {input.mpileup}: input MPILEUP file (.mpileup)
+# {output.bmat}: output BMAT file (.bmat)
+```
+
 
